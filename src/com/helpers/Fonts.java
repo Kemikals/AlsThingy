@@ -2,7 +2,6 @@ package com.helpers;
 
 import java.awt.Font;
 
-@SuppressWarnings("SpellCheckingInspection")
 public class Fonts {
 	
 		
