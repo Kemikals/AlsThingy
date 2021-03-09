@@ -1,7 +1,6 @@
 package com.components.software;
 
 import com.components.Component;
-import com.components.InstallMessage;
 import com.components.MotherBoard;
 
 public class OperatingSystem extends Component {

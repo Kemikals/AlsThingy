@@ -1,4 +1,4 @@
-package com.components;
+package com.store;
 
 public enum InstallMessage {
 

@@ -1,7 +1,6 @@
 package com.store;
 
 import com.components.Component;
-import com.components.InstallMessage;
 import com.components.MotherBoard;
 import com.components.hardware.Cpu;
 import com.components.hardware.Disk;
@@ -52,11 +51,11 @@ public class BuilderWindow {
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.add(createTitle());
         container.add(createTopSelectionPanel());
+        container.add(progressBar);
+        container.add(view);
         container.add(Box.createRigidArea(new Dimension(0, 20)));
         container.add(createButtons());
         container.add(Box.createRigidArea(new Dimension(0, 20)));
-        container.add(progressBar);
-        container.add(view);
         view.setFont(Fonts.Bold_Size(20));
         frame.setVisible(true);
     }

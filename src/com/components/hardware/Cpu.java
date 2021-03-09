@@ -1,7 +1,6 @@
 package com.components.hardware;
 
 import com.components.Component;
-import com.components.InstallMessage;
 import com.components.Installable;
 
 public class Cpu extends Component implements Installable {
