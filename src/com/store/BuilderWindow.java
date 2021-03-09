@@ -35,6 +35,7 @@ public class BuilderWindow {
     private static final int COLS = 2;
     private static final int LABEL_FONT_SIZE = 20;
     private static final int BUTTON_FONT_SIZE = 12;
+    private static final int TEXT_AREA_FONT_SIZE = 20;
     private static final int SPACE_BETWEEN_BUTTONS_HEIGHT = 0;
     private static final int SPACE_BETWEEN_BUTTONS_WIDTH = 100;
     private static final int SPACE_ABOVE_AND_BELOW_BUTTONS_HEIGHT = 20;
@@ -64,7 +65,7 @@ public class BuilderWindow {
         container.add(Box.createRigidArea(new Dimension(SPACE_ABOVE_AND_BELOW_BUTTONS_WIDTH, SPACE_ABOVE_AND_BELOW_BUTTONS_HEIGHT)));
         container.add(progressBar);
         container.add(view);
-        view.setFont(Fonts.Bold_Size(20));
+        view.setFont(Fonts.Bold_Size(TEXT_AREA_FONT_SIZE));
         frame.setVisible(true);
     }
 
