@@ -49,7 +49,6 @@ public class BuilderWindow {
         JPanel container = new JPanel();
         frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         frame.add(container);
-        System.out.println(frame.getSize());
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.add(createTitle());
         container.add(createTopSelectionPanel());
