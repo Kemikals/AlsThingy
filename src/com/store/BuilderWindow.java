@@ -132,9 +132,9 @@ public class BuilderWindow {
         if (progressBarPercent == 5) {
             handleInstallComponent(board.getRam(), InstallMessage.RAM, InstallMessage.RAM_FAILURE);
         } else if (progressBarPercent == 30) {
-            handleInstallComponent(board.getDisk(), InstallMessage.DISK, InstallMessage.DISK_FAILURE);
-        } else if (progressBarPercent == 50) {
             handleInstallComponent(board.getCpu(), InstallMessage.CPU, InstallMessage.CPU_FAILURE);
+        } else if (progressBarPercent == 50) {
+            handleInstallComponent(board.getDisk(), InstallMessage.DISK, InstallMessage.DISK_FAILURE);
         } else if (progressBarPercent == 75) {
             handleOsInstall();
         } else if (progressBarPercent == 100) {
