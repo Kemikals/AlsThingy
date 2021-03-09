@@ -144,12 +144,9 @@ public class BuilderWindow {
             }
             progressBar.setValue(COUNT++);
         });
-        timer.addActionListener((e) -> {
-            if (!timer.) {
-                selections.forEach(selection -> selection.setEnabled(true));
-            }
-        });
         timer.start();
+
+
     }
 
     public void addMessage(String message) {
