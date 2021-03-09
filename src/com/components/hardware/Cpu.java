@@ -8,10 +8,9 @@ public class Cpu extends Component implements Installable {
 
     private String speed;
 
-    public Cpu(String speed, String name) {
-        super(name, InstallMessage.CPU);
+    public Cpu(String speed) {
+        super("CPU");
         this.speed = speed;
-
     }
 
     public void setSpeed(String speed) {
@@ -24,5 +23,10 @@ public class Cpu extends Component implements Installable {
         super.print();
         System.out.println("Speed : " + this.speed);
         System.out.println("**************************");
+    }
+
+    @Override
+    public String toString() {
+        return speed;
     }
 }

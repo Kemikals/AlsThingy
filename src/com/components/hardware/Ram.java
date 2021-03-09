@@ -7,9 +7,10 @@ import com.components.Installable;
 public class Ram extends Component implements Installable {
 
     private String size;
+    public static InstallMessage failureMessage = InstallMessage.RAM_FAILURE;
 
-    public Ram(String size, String name) {
-        super(name, InstallMessage.RAM);
+    public Ram(String size) {
+        super("RAM");
         this.size = size;
 
     }
@@ -25,5 +26,10 @@ public class Ram extends Component implements Installable {
         System.out.println("Size : " + this.size);
         System.out.println("**************************");
 
+    }
+
+    @Override
+    public String toString() {
+        return size;
     }
 }

@@ -2,15 +2,13 @@ package com.components.software;
 
 import com.components.Component;
 import com.components.InstallMessage;
-import com.store.ComponentsBoard;
+import com.components.MotherBoard;
 
 public class OperatingSystem extends Component {
     private String osName;
-    private InstallMessage failureMessage;
 
-    public OperatingSystem(String name, String osName) {
-        super(name, InstallMessage.OS);
-        this.failureMessage = InstallMessage.OS_FAILURE;
+    public OperatingSystem(String osName) {
+        super("OS");
         this.osName = osName;
     }
 
@@ -22,11 +20,13 @@ public class OperatingSystem extends Component {
         this.osName = osName;
     }
 
-    public InstallMessage getFailureMessage() {
-        return failureMessage;
+
+    public boolean isInstallableOnBoard(MotherBoard board) {
+        return board.getDisk().isInstalled() && board.getRam().isInstalled() && board.getCpu().isInstalled();
     }
 
-    public boolean isInstallableOnBoard(ComponentsBoard board) {
-        return board.getDisk().isInstalled() && board.getRam().isInstalled() && board.getCpu().isInstalled();
+    @Override
+    public String toString() {
+        return osName;
     }
 }

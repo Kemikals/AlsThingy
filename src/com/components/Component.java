@@ -1,19 +1,16 @@
 package com.components;
 
-public class Component implements Installable {
-
-    private final String name;
-    private final InstallMessage installMessage;
+public abstract class Component implements Installable {
 
     private boolean installed;
+    private String name;
 
-    public Component(String name, InstallMessage installMessage) {
+    public Component(String name) {
         this.name = name;
-        this.installMessage = installMessage;
     }
 
-    public void print() {
-        System.out.println(this.name);
+    public void print(){
+        System.out.println(name);
     }
 
     @Override
@@ -25,9 +22,5 @@ public class Component implements Installable {
     @Override
     public boolean isInstalled() {
         return installed;
-    }
-
-    public InstallMessage getInstallMessage() {
-        return installMessage;
     }
 }
