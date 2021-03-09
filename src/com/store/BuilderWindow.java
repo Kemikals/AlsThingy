@@ -31,6 +31,14 @@ public class BuilderWindow {
     private static final int TIMER_DELAY = 35;
     private static final int MIN_WIDTH = 820;
     private static final int MIN_HEIGHT = 500;
+    private static final int ROWS = 4;
+    private static final int COLS = 2;
+    private static final int LABEL_FONT_SIZE = 20;
+    private static final int BUTTON_FONT_SIZE = 12;
+    private static final int SPACE_BETWEEN_BUTTONS_HEIGHT = 0;
+    private static final int SPACE_BETWEEN_BUTTONS_WIDTH = 100;
+    private static final int SPACE_ABOVE_AND_BELOW_BUTTONS_HEIGHT = 20;
+    private static final int SPACE_ABOVE_AND_BELOW_BUTTONS_WIDTH = 0;
 
     private final MotherBoard board;
 
@@ -51,9 +59,9 @@ public class BuilderWindow {
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.add(createTitle());
         container.add(createTopSelectionPanel());
-        container.add(Box.createRigidArea(new Dimension(0, 20)));
+        container.add(Box.createRigidArea(new Dimension(SPACE_ABOVE_AND_BELOW_BUTTONS_WIDTH, SPACE_ABOVE_AND_BELOW_BUTTONS_HEIGHT)));
         container.add(createButtons());
-        container.add(Box.createRigidArea(new Dimension(0, 20)));
+        container.add(Box.createRigidArea(new Dimension(SPACE_ABOVE_AND_BELOW_BUTTONS_WIDTH, SPACE_ABOVE_AND_BELOW_BUTTONS_HEIGHT)));
         container.add(progressBar);
         container.add(view);
         view.setFont(Fonts.Bold_Size(20));
@@ -71,13 +79,13 @@ public class BuilderWindow {
 
     private JLabel createLabel(String name) {
         JLabel label = new JLabel(name);
-        label.setFont(Fonts.Plain_Size(20));
+        label.setFont(Fonts.Plain_Size(LABEL_FONT_SIZE));
         return label;
     }
 
     private JPanel createTopSelectionPanel() {
         JPanel container = new JPanel();
-        container.setLayout(new GridLayout(4, 2));
+        container.setLayout(new GridLayout(ROWS, COLS));
 
         ramCombo = new JComboBox<>(new Ram[]{new Ram("8 GB"), new Ram("16 GB"), new Ram("32 GB")});
         ramCombo.addActionListener((e) -> board.setRam(ramCombo.getItemAt(ramCombo.getSelectedIndex())));
@@ -107,12 +115,12 @@ public class BuilderWindow {
     private Box createButtons() {
         Box box = new Box(BoxLayout.X_AXIS);
         JButton printButton = new JButton("PRINT ORDER SHEET");
-        printButton.setFont(Fonts.Bold_Size(12));
+        printButton.setFont(Fonts.Bold_Size(BUTTON_FONT_SIZE));
         buildButton = new JButton("ORDER AND BUILD");
         buildButton.addActionListener(this::build);
-        buildButton.setFont(Fonts.Bold_Size(12));
+        buildButton.setFont(Fonts.Bold_Size(BUTTON_FONT_SIZE));
         box.add(printButton);
-        box.add(Box.createRigidArea(new Dimension(100, 0)));
+        box.add(Box.createRigidArea(new Dimension(SPACE_BETWEEN_BUTTONS_WIDTH, SPACE_BETWEEN_BUTTONS_HEIGHT)));
         box.add(buildButton);
         return box;
     }
