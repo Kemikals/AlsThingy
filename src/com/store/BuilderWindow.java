@@ -30,8 +30,8 @@ public class BuilderWindow {
     private JButton buildButton;
 
     private static final int TIMER_DELAY = 35;
-    private static final int WIDTH = 815;
-    private static final int HEIGHT = 450;
+    private static final int MIN_WIDTH = 820;
+    private static final int MIN_HEIGHT = 500;
 
     private final MotherBoard board;
 
@@ -47,8 +47,9 @@ public class BuilderWindow {
 
     private void addAndStyleComponents(JFrame frame, JProgressBar progressBar, JTextArea view) {
         JPanel container = new JPanel();
-        frame.setSize(WIDTH, HEIGHT);
+        frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         frame.add(container);
+        System.out.println(frame.getSize());
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.add(createTitle());
         container.add(createTopSelectionPanel());
