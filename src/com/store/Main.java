@@ -8,7 +8,7 @@ public class Main {
     {
 
         MotherBoard board = new MotherBoard();
-     BuilderWindow builder = new BuilderWindow(815, 450, board);
+     BuilderWindow builder = new BuilderWindow(board);
 
     }
 }

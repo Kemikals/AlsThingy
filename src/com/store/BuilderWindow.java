@@ -1,11 +1,6 @@
 package com.store;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.List;
-
-import javax.swing.*;
-
+import com.components.Component;
 import com.components.InstallMessage;
 import com.components.MotherBoard;
 import com.components.hardware.Cpu;
@@ -13,47 +8,53 @@ import com.components.hardware.Disk;
 import com.components.hardware.Ram;
 import com.components.software.OperatingSystem;
 import com.helpers.Fonts;
-import com.components.Component;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
 public class BuilderWindow {
 
-    private static int COUNT;
-    private final JProgressBar progressBar;
-    private final JFrame frame;
-    private Timer timer;
     public JTextArea view;
-    protected final MotherBoard board;
-
     public JComboBox<Ram> ramCombo;
     public JComboBox<Cpu> cpuCombo;
     public JComboBox<Disk> diskCombo;
     public JComboBox<OperatingSystem> osCombo;
-
-    private List<JComponent> selections;
+    private final JFrame frame;
+    private Timer timer;
     private JButton buildButton;
-    private JButton printButton;
+    private final JProgressBar progressBar;
+    private final List<JComponent> selections;
 
-    BuilderWindow(int width, int height, MotherBoard board) {
+    private static final int TIMER_DELAY = 35;
+    private static final int WIDTH = 815;
+    private static final int HEIGHT = 450;
+    protected final MotherBoard board;
+
+    BuilderWindow(MotherBoard board) {
         this.board = board;
         frame = new JFrame();
-        JPanel container = new JPanel();
-        frame.setSize(width, height);
-        frame.add(container);
+        progressBar = new JProgressBar();
+        view = new JTextArea();
+        addAndStyleComponents(frame, progressBar, view);
 
+        selections = List.of(ramCombo, cpuCombo, diskCombo, osCombo, buildButton);
+    }
+
+    private void addAndStyleComponents(JFrame frame, JProgressBar progressBar, JTextArea view) {
+        JPanel container = new JPanel();
+        frame.setSize(WIDTH, HEIGHT);
+        frame.add(container);
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.add(createTitle());
         container.add(createTopSelectionPanel());
-
         container.add(Box.createRigidArea(new Dimension(0, 20)));
         container.add(createButtons());
         container.add(Box.createRigidArea(new Dimension(0, 20)));
-        progressBar = new JProgressBar();
         container.add(progressBar);
-        view = new JTextArea();
-        view.setFont(Fonts.Bold_Size(20));
         container.add(view);
-        selections = List.of(ramCombo, cpuCombo, diskCombo, osCombo, buildButton);
-
+        view.setFont(Fonts.Bold_Size(20));
         frame.setVisible(true);
     }
 
@@ -95,12 +96,6 @@ public class BuilderWindow {
         container.add(combo);
     }
 
-    private void reset() {
-        timer.stop();
-        view.setText("");
-        progressBar.setValue(COUNT);
-    }
-
     private void setSelectionsEnabled(boolean value) {
         selections.forEach(selection -> selection.setEnabled(value));
     }
@@ -113,7 +108,7 @@ public class BuilderWindow {
 
     public Box createButtons() {
         Box box = new Box(BoxLayout.X_AXIS);
-        printButton = new JButton("PRINT ORDER SHEET");
+        JButton printButton = new JButton("PRINT ORDER SHEET");
         printButton.setFont(Fonts.Bold_Size(12));
         buildButton = new JButton("ORDER AND BUILD");
         buildButton.addActionListener(this::build);
@@ -127,22 +122,30 @@ public class BuilderWindow {
     public void build(ActionEvent a) {
         setSelectionsEnabled(false);
         view.setText("");
-        COUNT = 0;
-        timer = new Timer(35, (e) -> {
-            if (progressBar.getValue() == 5) {
-                handleProgressUpdate(board.getRam(), InstallMessage.RAM, InstallMessage.RAM_FAILURE);
-            } else if (progressBar.getValue() == 30) {
-                handleProgressUpdate(board.getDisk(), InstallMessage.DISK, InstallMessage.DISK_FAILURE);
-            } else if (progressBar.getValue() == 50) {
-                handleProgressUpdate(board.getCpu(), InstallMessage.CPU, InstallMessage.CPU_FAILURE);
-            } else if (progressBar.getValue() == 75) {
-                handleOsInstall();
-            } else if (progressBar.getValue() == 100) {
-                handleBuildComplete();
-            }
-            progressBar.setValue(COUNT++);
+        progressBar.setValue(0);
+        timer = new Timer(TIMER_DELAY, (e) -> {
+            handleProgressUpdate(board, progressBar.getValue());
+            updateProgressBar();
         });
         timer.start();
+    }
+
+    private void handleProgressUpdate(MotherBoard board, int progressBarPercent) {
+        if (progressBarPercent == 5) {
+            handleProgressUpdate(board.getRam(), InstallMessage.RAM, InstallMessage.RAM_FAILURE);
+        } else if (progressBarPercent == 30) {
+            handleProgressUpdate(board.getDisk(), InstallMessage.DISK, InstallMessage.DISK_FAILURE);
+        } else if (progressBarPercent == 50) {
+            handleProgressUpdate(board.getCpu(), InstallMessage.CPU, InstallMessage.CPU_FAILURE);
+        } else if (progressBarPercent == 75) {
+            handleOsInstall();
+        } else if (progressBarPercent == 100) {
+            handleBuildComplete();
+        }
+    }
+
+    private void updateProgressBar() {
+        progressBar.setValue(progressBar.getValue() + 1);
     }
 
     public void handleOsInstall() {
