@@ -16,23 +16,26 @@ import java.util.List;
 
 public class BuilderWindow {
 
-    public JTextArea view;
-    public JComboBox<Ram> ramCombo;
-    public JComboBox<Cpu> cpuCombo;
-    public JComboBox<Disk> diskCombo;
-    public JComboBox<OperatingSystem> osCombo;
     private final JFrame frame;
-    private Timer timer;
-    private JButton buildButton;
     private final JProgressBar progressBar;
     private final List<JComponent> selections;
+    private final JTextArea view;
+
+    private JComboBox<Ram> ramCombo;
+    private JComboBox<Cpu> cpuCombo;
+    private JComboBox<Disk> diskCombo;
+    private JComboBox<OperatingSystem> osCombo;
+
+    private Timer timer;
+    private JButton buildButton;
 
     private static final int TIMER_DELAY = 35;
     private static final int WIDTH = 815;
     private static final int HEIGHT = 450;
-    protected final MotherBoard board;
 
-    BuilderWindow(MotherBoard board) {
+    private final MotherBoard board;
+
+    public BuilderWindow(MotherBoard board) {
         this.board = board;
         frame = new JFrame();
         progressBar = new JProgressBar();
@@ -58,7 +61,22 @@ public class BuilderWindow {
         frame.setVisible(true);
     }
 
-    public JPanel createTopSelectionPanel() {
+    private JPanel createTitle() {
+        JPanel box = new JPanel();
+        box.setLayout(new BoxLayout(box, BoxLayout.PAGE_AXIS));
+        box.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        box.add(createLabel("         COMPUTER STORE"));
+        box.add(createLabel("LETS BUILD YOUR COMPUTER"));
+        return box;
+    }
+
+    private JLabel createLabel(String name) {
+        JLabel label = new JLabel(name);
+        label.setFont(Fonts.Plain_Size(20));
+        return label;
+    }
+
+    private JPanel createTopSelectionPanel() {
         JPanel container = new JPanel();
         container.setLayout(new GridLayout(4, 2));
 
@@ -81,32 +99,13 @@ public class BuilderWindow {
         return container;
     }
 
-    public JPanel createTitle() {
-        JPanel box = new JPanel();
-        box.setLayout(new BoxLayout(box, BoxLayout.PAGE_AXIS));
-        box.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
-        box.add(createLabel("         COMPUTER STORE"));
-        box.add(createLabel("LETS BUILD YOUR COMPUTER"));
-        return box;
-    }
-
-    public void createSelection(JPanel container, JComboBox<?> combo, String label) {
+    private void createSelection(JPanel container, JComboBox<?> combo, String label) {
         combo.setSelectedIndex(-1);
         container.add(createLabel(label));
         container.add(combo);
     }
 
-    private void setSelectionsEnabled(boolean value) {
-        selections.forEach(selection -> selection.setEnabled(value));
-    }
-
-    public JLabel createLabel(String name) {
-        JLabel label = new JLabel(name);
-        label.setFont(Fonts.Plain_Size(20));
-        return label;
-    }
-
-    public Box createButtons() {
+    private Box createButtons() {
         Box box = new Box(BoxLayout.X_AXIS);
         JButton printButton = new JButton("PRINT ORDER SHEET");
         printButton.setFont(Fonts.Bold_Size(12));
@@ -119,7 +118,7 @@ public class BuilderWindow {
         return box;
     }
 
-    public void build(ActionEvent a) {
+    private void build(ActionEvent a) {
         setSelectionsEnabled(false);
         view.setText("");
         progressBar.setValue(0);
@@ -132,11 +131,11 @@ public class BuilderWindow {
 
     private void handleProgressUpdate(MotherBoard board, int progressBarPercent) {
         if (progressBarPercent == 5) {
-            handleProgressUpdate(board.getRam(), InstallMessage.RAM, InstallMessage.RAM_FAILURE);
+            handleInstallComponent(board.getRam(), InstallMessage.RAM, InstallMessage.RAM_FAILURE);
         } else if (progressBarPercent == 30) {
-            handleProgressUpdate(board.getDisk(), InstallMessage.DISK, InstallMessage.DISK_FAILURE);
+            handleInstallComponent(board.getDisk(), InstallMessage.DISK, InstallMessage.DISK_FAILURE);
         } else if (progressBarPercent == 50) {
-            handleProgressUpdate(board.getCpu(), InstallMessage.CPU, InstallMessage.CPU_FAILURE);
+            handleInstallComponent(board.getCpu(), InstallMessage.CPU, InstallMessage.CPU_FAILURE);
         } else if (progressBarPercent == 75) {
             handleOsInstall();
         } else if (progressBarPercent == 100) {
@@ -144,30 +143,7 @@ public class BuilderWindow {
         }
     }
 
-    private void updateProgressBar() {
-        progressBar.setValue(progressBar.getValue() + 1);
-    }
-
-    public void handleOsInstall() {
-        if (board.getOs() != null && board.getOs().isInstallableOnBoard(board)) {
-            handleProgressUpdate(board.getOs(), InstallMessage.OS, InstallMessage.OS_FAILURE);
-        } else {
-            addMessage(InstallMessage.OS_FAILURE.toString());
-            setSelectionsEnabled(true);
-            timer.stop();
-        }
-    }
-
-    public void handleBuildComplete() {
-        timer.stop();
-        JOptionPane.showMessageDialog(frame, "CONGRATS ORDER IS COMPLETED AND YOUR COMPUTER IS ALL SET  ");
-    }
-
-    public void addMessage(String message) {
-        view.append(message + System.lineSeparator());
-    }
-
-    private void handleProgressUpdate(Component component, InstallMessage success, InstallMessage failure) {
+    private void handleInstallComponent(Component component, InstallMessage success, InstallMessage failure) {
         addMessage((component != null ? success : failure).toString());
         if (component != null) {
             component.install();
@@ -175,5 +151,32 @@ public class BuilderWindow {
             timer.stop();
             setSelectionsEnabled(true);
         }
+    }
+
+    private void handleOsInstall() {
+        if (board.getOs() != null && board.getOs().isInstallableOnBoard(board)) {
+            handleInstallComponent(board.getOs(), InstallMessage.OS, InstallMessage.OS_FAILURE);
+        } else {
+            addMessage(InstallMessage.OS_FAILURE.toString());
+            setSelectionsEnabled(true);
+            timer.stop();
+        }
+    }
+
+    private void handleBuildComplete() {
+        timer.stop();
+        JOptionPane.showMessageDialog(frame, "CONGRATS ORDER IS COMPLETED AND YOUR COMPUTER IS ALL SET  ");
+    }
+
+    private void updateProgressBar() {
+        progressBar.setValue(progressBar.getValue() + 1);
+    }
+
+    private void addMessage(String message) {
+        view.append(message + System.lineSeparator());
+    }
+
+    private void setSelectionsEnabled(boolean value) {
+        selections.forEach(selection -> selection.setEnabled(value));
     }
 }
