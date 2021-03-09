@@ -101,6 +101,10 @@ public class BuilderWindow {
         progressBar.setValue(COUNT);
     }
 
+    private void setSelectionsEnabled(boolean value) {
+        selections.forEach(selection -> selection.setEnabled(value));
+    }
+
     public JLabel createLabel(String name) {
         JLabel label = new JLabel(name);
         label.setFont(Fonts.Plain_Size(20));
@@ -121,32 +125,39 @@ public class BuilderWindow {
     }
 
     public void build(ActionEvent a) {
-        selections.forEach(selection -> selection.setEnabled(false));
+        setSelectionsEnabled(false);
+        view.setText("");
+        COUNT = 0;
         timer = new Timer(35, (e) -> {
-
-
             if (progressBar.getValue() == 5) {
                 handleProgressUpdate(board.getRam(), InstallMessage.RAM, InstallMessage.RAM_FAILURE);
             } else if (progressBar.getValue() == 30) {
                 handleProgressUpdate(board.getDisk(), InstallMessage.DISK, InstallMessage.DISK_FAILURE);
             } else if (progressBar.getValue() == 50) {
                 handleProgressUpdate(board.getCpu(), InstallMessage.CPU, InstallMessage.CPU_FAILURE);
-            } else if (progressBar.getValue() == 75 && board.getOs() != null) {
-                boolean canInstall = board.getOs().isInstallableOnBoard(board);
-                if (canInstall) {
-                    handleProgressUpdate(board.getOs(), InstallMessage.OS, InstallMessage.OS_FAILURE);
-                } else {
-                    addMessage(InstallMessage.OS_FAILURE.toString());
-                }
+            } else if (progressBar.getValue() == 75) {
+                handleOsInstall();
             } else if (progressBar.getValue() == 100) {
-                timer.stop();
-                JOptionPane.showMessageDialog(frame, "CONGRATS ORDER IS COMPLETED AND YOUR COMPUTER IS ALL SET  ");
+                handleBuildComplete();
             }
             progressBar.setValue(COUNT++);
         });
         timer.start();
+    }
 
+    public void handleOsInstall() {
+        if (board.getOs() != null && board.getOs().isInstallableOnBoard(board)) {
+            handleProgressUpdate(board.getOs(), InstallMessage.OS, InstallMessage.OS_FAILURE);
+        } else {
+            addMessage(InstallMessage.OS_FAILURE.toString());
+            setSelectionsEnabled(true);
+            timer.stop();
+        }
+    }
 
+    public void handleBuildComplete() {
+        timer.stop();
+        JOptionPane.showMessageDialog(frame, "CONGRATS ORDER IS COMPLETED AND YOUR COMPUTER IS ALL SET  ");
     }
 
     public void addMessage(String message) {
@@ -159,6 +170,7 @@ public class BuilderWindow {
             component.install();
         } else {
             timer.stop();
+            setSelectionsEnabled(true);
         }
     }
 }
